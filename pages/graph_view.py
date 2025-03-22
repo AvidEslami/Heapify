@@ -4,11 +4,26 @@ from pyvis.network import Network
 import os
 import streamlit.components.v1 as components
 
+from tools.queries import get_initial_topic_list
+
+# Check if there's a directory for ./data/{topic} and create it if it doesn't exist
+if not os.path.exists(f"./data/{st.session_state['topic']}"):
+    os.makedirs(f"./data/{st.session_state['topic']}")
+elif os.path.exists(f"./data/{st.session_state['topic']}/topic_list.txt"): # Check if there's a topic_list.txt file in the directory
+    with open(f"./data/{st.session_state['topic']}/topic_list.txt", "r") as f:
+        topics = f.read().split("\n")
+else:
+    topics = get_initial_topic_list(st.session_state['topic'])
+    with open(f"./data/{st.session_state['topic']}/topic_list.txt", "w") as f:
+        f.write("\n".join(topics))
+
 def graphify_data():
     nodes = []
     edges = []
-    for filename in os.listdir("./data"):
-        with open(f"./data/{filename}", "r") as f:
+    for filename in os.listdir(f"./data/{st.session_state['topic']}"):
+        with open(f"./data/{st.session_state['topic']}/{filename}", "r") as f:
+            if filename == "topic_list.txt":
+                continue
             nodes.append(filename)
             while character := f.read(1):
                 if character == "[":
@@ -24,7 +39,14 @@ def graphify_data():
 
 nodes, edges = graphify_data()
 
+for topic in topics:
+    if topic not in nodes:
+        edges.append((st.session_state['topic'], topic))
+
 graph = nx.Graph()
+# First add the topic node
+graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#ff0000", shape="dot", size=15)
+
 for node in nodes:
     graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15)
 graph.add_edges_from(edges)
@@ -58,12 +80,21 @@ with open("test.html", "r", encoding="utf-8") as f:
 # source_code = html
 components.html(html, height=600, width=800)
 
-option = st.selectbox("Pick a node:",nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
+option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
 # st.write(option)
 if option:
     st.session_state["node"] = option
     st.switch_page("pages/node_view.py")
 
+uncovered_topics = []
+for topic in topics:
+    if topic not in nodes:
+        uncovered_topics.append(topic)
+new_option = st.selectbox("Pick a new node to learn about", uncovered_topics,index=None,placeholder=f"None")
+
+if new_option:
+    st.session_state["node"] = new_option
+    st.switch_page("pages/node_view.py")
 
 # params = st.query_params
 # if "node" in params:
