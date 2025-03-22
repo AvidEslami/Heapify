@@ -66,4 +66,6 @@ components.html(source_code, height=600, width=800)
 # Show clicked node if query param exists
 params = st.query_params
 if "node" in params:
+    st.session_state['node'] = params['node']
+    st.switch_page("./pages/node_view.py")
     st.success(f"You clicked node: {params['node']}")
