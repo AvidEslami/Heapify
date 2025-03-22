@@ -39,32 +39,33 @@ net.save_graph("test.html")
 with open("test.html", "r", encoding="utf-8") as f:
     html = f.read()
 
-# Inject script to update top-level window location
-html = html.replace(
-    "</body>",
-    """
-    <script type="text/javascript">
-        network.on("click", function (params) {
-            if (params.nodes.length > 0) {
-                const clickedNode = params.nodes[0];
-                localStorage.setItem("selected_node", clickedNode);
-                window.location.href = "/?node=" + clickedNode;
-            }
-        });
-    </script>
-    </body>
-    """
-)
+# # Inject script to update top-level window location
+# html = html.replace(
+#     "</body>",
+#     """
+#     <script type="text/javascript">
+#         network.on("click", function (params) {
+#             if (params.nodes.length > 0) {
+#                 let nodeId = params.nodes[0];
+#                 window.location.search = "?node=" + nodeId;
+#             }
+#         });
+#     </script>
+#     </body>
+#     """
+# )
 
+# source_code = html
+components.html(html, height=600, width=800)
 
-with open("test.html", "w", encoding="utf-8") as f:
-    f.write(html)
-
-with open("test.html", 'r', encoding='utf-8') as HtmlFile:
-    source_code = HtmlFile.read()
-components.html(source_code, height=600, width=800)
-
-params = st.query_params
-if "node" in params:
-    st.session_state["node"] = params["node"]
+option = st.selectbox("Pick a node:",nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
+# st.write(option)
+if option:
+    st.session_state["node"] = option
     st.switch_page("pages/node_view.py")
+
+
+# params = st.query_params
+# if "node" in params:
+#     st.session_state["node"] = params["node"]
+#     st.switch_page("pages/node_view.py")
