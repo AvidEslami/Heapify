@@ -53,27 +53,31 @@ for edge in edges:
         uncovered_topics.append(edge[1])
 st.session_state['all_topics'] = uncovered_topics
 
-graph = nx.Graph()
-# First add the topic node
-graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#BF40BF", shape="dot", size=25)
+def generate_graph():
+    graph = nx.Graph()
+    # First add the topic node
+    graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#BF40BF", shape="dot", size=25)
 
-for node in nodes:
-    graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15)
-graph.add_edges_from(edges)
+    for node in nodes:
+        graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15)
+    graph.add_edges_from(edges, length=500)
+    # Custom physics for stronger repulsion
 
-net = Network(notebook=False, cdn_resources='remote')
-net.from_nx(graph)
-net.show_buttons(filter_=['nodes', 'edges', 'physics'])
+    net = Network(notebook=False, cdn_resources='remote')
+    # net.set_edge_smooth('false') # OPTIONAL
+    net.show_buttons(filter_=['nodes', 'edges', 'physics'])
+    # Save and inject JS to trigger a redirect with node param
+    net.from_nx(graph)
+    net.save_graph("test.html")
+    with open("test.html", "r", encoding="utf-8") as f:
+        html = f.read()
+    return html
 
 st.title("Graph pyvis test!")
 
-# Save and inject JS to trigger a redirect with node param
-net.save_graph("test.html")
-with open("test.html", "r", encoding="utf-8") as f:
-    html = f.read()
 
 # source_code = html
-components.html(html, height=600, width=800)
+components.html(generate_graph(), height=600, width=800)
 
 option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
 # st.write(option)
