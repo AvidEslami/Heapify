@@ -2,7 +2,7 @@ import streamlit as st
 import networkx as nx
 from pyvis.network import Network
 import os
-import streamlit.components.v1 as components
+from components.custom_graph import custom_graph
 
 from tools.queries import get_initial_topic_list
 
@@ -75,9 +75,13 @@ def generate_graph():
 
 st.title("Graph pyvis test!")
 
+source_code = generate_graph()
 
-# source_code = html
-components.html(generate_graph(), height=600, width=800)
+graph_option = custom_graph(elem=source_code, key="custom_graph")
+
+if graph_option:
+    st.session_state["node"] = graph_option
+    st.switch_page("pages/node_view.py")
 
 option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
 # st.write(option)
