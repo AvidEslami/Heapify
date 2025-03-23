@@ -48,6 +48,7 @@ nodes, edges, parents = graphify_data()
 # st.session_state['all_topics'] = topics + nodes
 for topic in topics:
     edges.append((st.session_state['topic'], topic))
+    parents[topic] = st.session_state['topic']
 
 
 uncovered_topics = []
@@ -84,6 +85,7 @@ graph_option = custom_graph(elem=source_code, key="custom_graph")
 
 if graph_option:
     st.session_state["node"] = graph_option
+    st.session_state["node_parent"] = parents[graph_option]
     st.switch_page("pages/node_view.py")
 
 option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
