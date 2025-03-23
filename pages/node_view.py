@@ -49,3 +49,13 @@ else:
                 st.switch_page("pages/graph_view.py")
 
         st.write(f.read())
+
+    new_option = st.text_input("Enter a new node to learn about", value="", help="Enter the name of the new node", key="new_node")
+
+    if new_option:
+        with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "a") as f:
+            f.write(f"\nAdditional connection [[{new_option}]]")
+        st.session_state["node_parent"] = st.session_state['node']
+        st.session_state["node"] = new_option
+        del st.session_state["new_node"]
+        st.rerun()
