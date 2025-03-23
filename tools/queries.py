@@ -21,13 +21,13 @@ def get_initial_topic_list(topic: str) -> list:
     print(f"Cleaned Response text: \n<{response_text}>")
     return eval(response_text)
 
-def get_topic_lesson(topic: str, full_topic_list: list) -> str:
+def get_topic_lesson(topic: str, parent: list) -> str:
     with open(".env", "r") as f:
         api_key = f.read()
     with open("./prompt_structures/topic_lesson.txt", "r") as f:
         prompt = f.read()
     prompt = prompt.replace("TOPIC", topic)
-    prompt = prompt.replace("OTHERS", str(full_topic_list))
+    prompt = prompt.replace("PARENT", parent)
 
     client = genai.Client(api_key=api_key)
 
