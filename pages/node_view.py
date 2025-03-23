@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 from tools.queries import get_topic_lesson
+import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
 
@@ -30,32 +31,41 @@ else:
         with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "w", encoding="utf-8") as f:
             f.write(topic_data)
     # Display the node file
-    with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
-        # two invisible columns, one with title and the other with a delete node button
-        col1, col2, col3 = st.columns([13, 3, 1])  # Wider left column for title, narrower right for button
+    try:
+        with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
+            # two invisible columns, one with title and the other with a delete node button
+            col1, col2, col3 = st.columns([13, 3, 1])  # Wider left column for title, narrower right for button
 
-        with col1:
-            st.title(st.session_state['node'].replace(".md", ""))
+            with col1:
+                st.title(st.session_state['node'].replace(".md", ""))
 
-        with col2: 
-            if st.button("Return to Graph View", help="⬅", use_container_width=True):
-                st.switch_page("pages/graph_view.py")
-        with col3:
-            if st.button("🗑️", help="Delete this node"):
-                st.success("Node deleted.")
-                st.session_state["path_to_delete"] = f"./data/{st.session_state['topic']}/{st.session_state['node']}"
-                st.session_state['node'] = None
-                # os.remove(f"./data/{st.session_state['topic']}/{st.session_state['node']}")
-                st.switch_page("pages/graph_view.py")
+            with col2: 
+                if st.button("Return to Graph View", help="⬅", use_container_width=True):
+                    st.switch_page("pages/graph_view.py")
+            with col3:
+                if st.button("🗑️", help="Delete this node"):
+                    st.success("Node deleted.")
+                    st.session_state["path_to_delete"] = f"./data/{st.session_state['topic']}/{st.session_state['node']}"
+                    st.session_state['node'] = None
+                    # os.remove(f"./data/{st.session_state['topic']}/{st.session_state['node']}")
+                    st.switch_page("pages/graph_view.py")
 
-        st.write(f.read())
+            st.write(f.read())
+    except:
+        st.write("Error reading file")
+        # Delete the corrupted file
+        os.remove(f"./data/{st.session_state['topic']}/{st.session_state['node']}")
 
-    new_option = st.text_input("Enter a new node to learn about", value="", help="Enter the name of the new node", key="new_node")
+    new_option = st.text_input("Enter a new sub-topic to learn about", value="", help="Enter the name of the new sub-topic", key="new_node")
 
     if new_option:
-        with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "a") as f:
-            f.write(f"\nAdditional connection [[{new_option}]]")
-        st.session_state["node_parent"] = st.session_state['node']
-        st.session_state["node"] = new_option
-        del st.session_state["new_node"]
-        st.rerun()
+        if st.button("Deep Dive!", help="Explore this new sub-topic"):
+            with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "a") as f:
+                f.write(f"\nAdditional connection [[{new_option}]]")
+            st.session_state["node_parent"] = st.session_state['node']
+            st.session_state["node"] = new_option
+            del st.session_state["new_node"]
+            del new_option
+            components.html("<script>window.scrollTo(0, 0);</script>", height=0, width=0)
+            # st.rerun()
+            st.switch_page("pages/node_view.py")
