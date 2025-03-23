@@ -4,7 +4,7 @@ import os
 st.title("Welcome to the Decompissect Fragsolveductitionanalysegment Factor!")
 st.write("This is a tool to help you understand the WORLD>~!.")
 
-st.text_input("Enter a topic to learn about:", "examples: [Dark Philosophy, CNN's, Pokemon, Web Dev, Naruto's Mom]", key="input")
+st.text_input("Enter a topic to learn about:", placeholder="examples: [Dark Philosophy, CNN's, Pokemon, Web Dev, Naruto's Mom]", key="input")
 
 st.button("Start Exploring", key="start")
 
@@ -13,7 +13,7 @@ options = []
 for folder in os.listdir("./data"):
     if os.path.isdir(f"./data/{folder}"):
         options.append(folder)
-st.selectbox("Or select one of the previous selected topics:", options, placeholder='', index=None, key="previous")
+st.selectbox("Or continue learning about one of the previously selected topics:", options, placeholder='', index=None, key="previous")
 # On button press, save the topic to session_state and redirect to graph_view
 if st.session_state['start'] and st.session_state['start'] != "examples: [Dark Philosophy, CNN's, Pokemon, Web Dev, Naruto's Mom]":
     topic = st.session_state['input']
