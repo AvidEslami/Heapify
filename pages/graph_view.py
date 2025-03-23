@@ -9,6 +9,35 @@ from tools.queries import get_initial_topic_list
 
 st.set_page_config(layout="wide")
 
+def add_logo():
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebarNav"] {
+                background-image: url("https://raw.githubusercontent.com/AlcxMtr/Heapify/main/static/heapify.webp");
+                background-repeat: no-repeat;
+                background-position: 20px 10px;
+                background-size: 72px 72px;       /* 1.5x size */
+                padding-top: 90px;                /* give a bit more vertical room */
+            }
+
+            [data-testid="stSidebarNav"]::before {
+                content: "Heapify";
+                display: block;
+                font-size: 26px;
+                font-weight: bold;
+                margin-left: 100px;               /* shift text to the right of larger image */
+                margin-top: -80px;                /* align vertically with 72px image */
+                line-height: 72px;
+                color: #FF8C00;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+add_logo()
+
+
 if 'path_to_delete' in st.session_state:
     os.remove(st.session_state['path_to_delete'])
     del st.session_state['path_to_delete']
@@ -121,6 +150,7 @@ else:
         with open("test.html", "r", encoding="utf-8") as f:
             html = f.read()
             html = html.replace("background-color: #ffffff;", f"background-color: {bg_color};") # Background color
+            html = html.replace("border: 1px", f"border: 0px") # Remove border
         return html
 
 
