@@ -54,7 +54,7 @@ nodes, edges, parents = graphify_data()
 for topic in topics:
     edges.append((st.session_state['topic'], topic))
     parents[topic] = st.session_state['topic']
-parents[st.session_state['topic']] = "wholistically"
+parents[st.session_state['topic']] = "holistically"
 
 
 uncovered_topics = []
