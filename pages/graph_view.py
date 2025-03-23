@@ -41,6 +41,9 @@ def graphify_data():
                         while next_char != "]":
                             target_node += next_char
                             next_char = f.read(1)
+                        if "*" in target_node:
+                            # We drop this connection
+                            continue
                         edges.append((filename, target_node))
                         parents[target_node] = filename
     return nodes, edges, parents

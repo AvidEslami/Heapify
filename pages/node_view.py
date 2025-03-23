@@ -21,9 +21,10 @@ else:
     if not st.session_state['node'].endswith(".md"):
         st.session_state['node'] = f"{st.session_state['node']}.md"
     if not (os.path.exists(f"./data/{st.session_state['topic']}/{st.session_state['node']}")):
+        topic_prompter = st.session_state['topic']
         node_prompter = st.session_state['node'].replace(".md", "")
         node_parent_prompter = st.session_state['node_parent'].replace(".md", "")
-        topic_data = get_topic_lesson(node_prompter, node_parent_prompter)
+        topic_data = get_topic_lesson(topic_prompter, node_prompter, node_parent_prompter)
         with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "w", encoding="utf-8") as f:
             f.write(topic_data)
     # Display the node file
