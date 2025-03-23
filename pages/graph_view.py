@@ -93,11 +93,11 @@ else:
             is_dark = True
 
         # Set colors based on theme
-        bg_color = "#2B2B2B" if is_dark else "#FFFFFF"
-        font_color = "#E0E0E0" if is_dark else "#222222"
-        topic_node_color = "#FF8C00" if is_dark else "#D2691E"  # orange vs sienna
-        explored_node_color = "#00FF00" if is_dark else "#228B22"  # neon green vs forest green
-        unexplored_node_color = "#AAAAAA" if is_dark else "#888888"
+        bg_color = "#2B2B2B" if is_dark else "#FAFAFA"
+        font_color = "#E0E0E0" if is_dark else "#2C2C2C"
+        topic_node_color = "#FF8C00" if is_dark else "#FF7043"
+        explored_node_color = "#00FF00" if is_dark else "#4CAF50"
+        unexplored_node_color = "#AAAAAA" if is_dark else "#B0BEC5"
 
         graph = nx.Graph()
         # First add the topic node
