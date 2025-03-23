@@ -75,7 +75,7 @@ def generate_graph():
 
     net = Network(notebook=False, cdn_resources='remote')
     # net.set_edge_smooth('false') # OPTIONAL
-    net.show_buttons(filter_=['nodes', 'edges', 'physics'])
+    # net.show_buttons(filter_=['nodes', 'edges', 'physics'])
     # Save and inject JS to trigger a redirect with node param
     net.from_nx(graph)
     net.save_graph("test.html")
