@@ -78,7 +78,17 @@ function Graph({ args, disabled, theme }: ComponentProps) {
   }, [selection]);
 
   return (
-    <div ref={graphContainerRef} style={{ width: "100%", height: "600px" }} />
+    <div
+      ref={graphContainerRef}
+      style={{
+        width: "104%",
+        height: "600px",
+        marginTop: "-10px",
+        marginLeft: "-5px",
+        margin: "-10px ",
+        overflow: "hidden",
+      }}
+    />
   );
 }
 
