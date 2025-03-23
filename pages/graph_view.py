@@ -3,6 +3,7 @@ import networkx as nx
 from pyvis.network import Network
 import os
 import streamlit.components.v1 as components
+from components.custom_graph import custom_graph
 
 from tools.queries import get_initial_topic_list
 
@@ -69,7 +70,6 @@ with open("test.html", "r", encoding="utf-8") as f:
 #         network.on("click", function (params) {
 #             if (params.nodes.length > 0) {
 #                 let nodeId = params.nodes[0];
-#                 window.location.search = "?node=" + nodeId;
 #             }
 #         });
 #     </script>
@@ -77,8 +77,11 @@ with open("test.html", "r", encoding="utf-8") as f:
 #     """
 # )
 
-# source_code = html
-components.html(html, height=600, width=800)
+graph_option = custom_graph("custom_graph", elem=html, key="custom_graph")
+
+if graph_option:
+    st.session_state["node"] = graph_option
+    st.switch_page("pages/node_view.py")
 
 option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
 # st.write(option)
