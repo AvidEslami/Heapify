@@ -83,10 +83,10 @@ function Graph({ args, disabled, theme }: ComponentProps) {
       style={{
         width: "104%",
         height: "600px",
-        marginTop: "-10px",
+        marginTop: "-9px",
         marginLeft: "-5px",
-        margin: "-10px ",
-        overflow: "hidden",
+        marginBottom: "0px ",
+        overflow: "clip",
       }}
     />
   );

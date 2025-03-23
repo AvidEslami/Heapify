@@ -113,6 +113,15 @@ else:
 
     source_code = generate_graph()
 
+    st.markdown(
+        """
+        <h1 style='text-align: left; color: #333333; font-size: 1.6vw; color: #E0E0E0; margin-bottom: 20px; padding: 0px; border-radius: 0px;'>
+            Click a node to explore further!
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
+
     graph_option = custom_graph(elem=source_code, key="custom_graph")
 
     @st.dialog(graph_option if graph_option else "None")
