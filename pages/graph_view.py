@@ -12,7 +12,9 @@ if not os.path.exists(f"./data/{st.session_state['topic']}"):
 elif os.path.exists(f"./data/{st.session_state['topic']}/topic_list.txt"): # Check if there's a topic_list.txt file in the directory
     with open(f"./data/{st.session_state['topic']}/topic_list.txt", "r") as f:
         topics = f.read().split("\n")
-else:
+
+# if topics is not defined, get the initial topic list
+if 'topics' not in locals():
     topics = get_initial_topic_list(st.session_state['topic'])
     with open(f"./data/{st.session_state['topic']}/topic_list.txt", "w") as f:
         f.write("\n".join(topics))
@@ -38,7 +40,7 @@ def graphify_data():
     return nodes, edges
 
 nodes, edges = graphify_data()
-
+st.session_state['all_topics'] = topics
 for topic in topics:
     if topic not in nodes:
         edges.append((st.session_state['topic'], topic))

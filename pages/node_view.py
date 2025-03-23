@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+from tools.queries import get_topic_lesson
 
 # Check if topic and node is in session_state if not redirect to landing or graph_view
 if ('topic' not in st.session_state) or ('node' not in st.session_state) or (st.session_state['node'] is None):
@@ -17,7 +18,13 @@ if ('topic' not in st.session_state) or ('node' not in st.session_state) or (st.
         st.switch_page("pages/graph_view.py")
 else:
     # Check if the node file exists
-    if (os.path.exists(f"./data/{st.session_state['topic']}/{st.session_state['node']}")):
-        with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
-            st.write(f.read())
-    else:
+    if not st.session_state['node'].endswith(".md"):
+        st.session_state['node'] = f"{st.session_state['node']}.md"
+    if not (os.path.exists(f"./data/{st.session_state['topic']}/{st.session_state['node']}")):
+        topic_data = get_topic_lesson(st.session_state['node'], st.session_state['all_topics'])
+        with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "w", encoding="utf-8") as f:
+            f.write(topic_data)
+    # Display the node file
+    with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
+        st.title(st.session_state['node'].replace(".md", ""))
+        st.write_stream(f)
