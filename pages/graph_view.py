@@ -144,7 +144,7 @@ else:
                         f.write("\n".join(ignored_topics))
                 # Prevent window from staying open
                 # graph_option = ""
-        if st.session_state["deleter"]:
+        if "deleter" in st.session_state and st.session_state["deleter"]:
             st.session_state["deleter"] = False
             del st.session_state["custom_graph"]
             st.rerun()
