@@ -60,7 +60,7 @@ def generate_graph():
 
     for node in nodes:
         graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15)
-    graph.add_edges_from(edges, length=500)
+    graph.add_edges_from(edges, length=300)
     # Custom physics for stronger repulsion
 
     net = Network(notebook=False, cdn_resources='remote')
