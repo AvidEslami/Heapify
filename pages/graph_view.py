@@ -83,16 +83,6 @@ def generate_graph():
         html = f.read()
     return html
 
-
-source_code = generate_graph()
-
-graph_option = custom_graph(elem=source_code, key="custom_graph")
-
-if graph_option:
-    st.session_state["node"] = graph_option
-    st.session_state["node_parent"] = parents[graph_option]
-    st.switch_page("pages/node_view.py")
-
 option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
 # st.write(option)
 if option:
@@ -100,10 +90,33 @@ if option:
     st.session_state["node_parent"] = parents[option]
     st.switch_page("pages/node_view.py")
 
+source_code = generate_graph()
+
+graph_option = custom_graph(elem=source_code, key="custom_graph")
+
+@st.dialog(graph_option if graph_option else "None")
+def NodeClick():
+    st.write(f"What would you like to do?")
+    col1, col2 = st.columns(2)
+    with col1:    
+      if st.button("Explore", use_container_width=True):
+          st.session_state["node"] = graph_option
+          st.session_state["node_parent"] = parents[graph_option]
+          st.switch_page("pages/node_view.py")
+    with col2:
+      if st.button("Delete", use_container_width=True):
+          # Put delete code here
+          st.rerun()
+
+
+if graph_option:
+    NodeClick()
+
 # uncovered_topics = []
 # for topic in topics:
 #     if topic not in nodes:
 #         uncovered_topics.append(topic)
+
 new_option = st.selectbox("Pick a new node to learn about", uncovered_topics,index=None,placeholder=f"None")
 
 if new_option:
