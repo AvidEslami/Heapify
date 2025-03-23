@@ -2,6 +2,8 @@ import streamlit as st
 import os
 from tools.queries import get_topic_lesson
 
+st.set_page_config(layout="wide")
+
 # Check if topic and node is in session_state if not redirect to landing or graph_view
 if ('topic' not in st.session_state) or ('node' not in st.session_state) or (st.session_state['node'] is None):
     st.write("Please switch to the landing page to select a topic or graph view to select a topic and a node!")
