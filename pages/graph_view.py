@@ -93,6 +93,9 @@ else:
         net.save_graph("test.html")
         with open("test.html", "r", encoding="utf-8") as f:
             html = f.read()
+            # html = html.replace("background-color: #ffffff;", "background-color: lightgray;") # Background color
+            # html = html.replace("97c2fc", "ffffff") # Unexplored node colors
+            # html = html.replace
         return html
 
 
