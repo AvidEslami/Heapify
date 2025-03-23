@@ -41,7 +41,7 @@ def graphify_data():
                         while next_char != "]":
                             target_node += next_char
                             next_char = f.read(1)
-                        if "*" in target_node:
+                        if "*" in target_node or (len(target_node) > 50):
                             # We drop this connection
                             continue
                         edges.append((filename, target_node))
