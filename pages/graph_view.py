@@ -38,9 +38,16 @@ else:
         nodes = []
         edges = []
         parents = {}
+        # Grab the ignored topics from the ignored_topics.txt file
+        if os.path.exists(f"./data/{st.session_state['topic']}/ignored_topics.txt"):
+            with open(f"./data/{st.session_state['topic']}/ignored_topics.txt", "r") as f:
+                ignored_topics = f.read()
+        else:
+            ignored_topics = ""
         for filename in os.listdir(f"./data/{st.session_state['topic']}"):
             with open(f"./data/{st.session_state['topic']}/{filename}", "r") as f:
-                if filename == "topic_list.txt":
+                # st.write(filename,ignored_topics)
+                if filename == "topic_list.txt" or filename == "ignored_topics.txt" or filename in ignored_topics:
                     continue
                 filename = filename.replace(".md", "") # Strip .md from filename
                 nodes.append(filename)
@@ -58,14 +65,15 @@ else:
                                 continue
                             edges.append((filename, target_node))
                             parents[target_node] = filename
-        return nodes, edges, parents
+        return nodes, edges, parents, ignored_topics
 
 
-    nodes, edges, parents = graphify_data()
+    nodes, edges, parents, ignored_topics = graphify_data()
     # st.session_state['all_topics'] = topics + nodes
     for topic in topics:
-        edges.append((st.session_state['topic'], topic))
-        parents[topic] = st.session_state['topic']
+        if topic not in ignored_topics:
+            edges.append((st.session_state['topic'], topic))
+            parents[topic] = st.session_state['topic']
     parents[st.session_state['topic']] = "holistically"
 
 
@@ -114,8 +122,32 @@ else:
               st.switch_page("pages/node_view.py")
         with col2:
           if st.button("Delete", use_container_width=True):
-              # Put delete code here
-              st.rerun()
+              # Check if node file exists
+              node = graph_option
+              
+              st.session_state["deleter"] = True
+              if os.path.exists(f"./data/{st.session_state['topic']}/{node}.md"):
+                os.remove(f"./data/{st.session_state['topic']}/{node}.md")
+                st.success("Node deleted.")
+              else:
+                # Check if this topic has an ignored_topics.txt file
+                if not os.path.exists(f"./data/{st.session_state['topic']}/ignored_topics.txt"):
+                    with open(f"./data/{st.session_state['topic']}/ignored_topics.txt", "w") as f:
+                        f.write(node)
+                else:
+                    with open(f"./data/{st.session_state['topic']}/ignored_topics.txt", "r") as f:
+                        # Append the node to the ignored_topics.txt file
+                        ignored_topics = f.read().split("\n")
+                    if node not in ignored_topics:
+                        ignored_topics.append(node)
+                    with open(f"./data/{st.session_state['topic']}/ignored_topics.txt", "w") as f:
+                        f.write("\n".join(ignored_topics))
+                # Prevent window from staying open
+                # graph_option = ""
+        if st.session_state["deleter"]:
+            st.session_state["deleter"] = False
+            del st.session_state["custom_graph"]
+            st.rerun()
 
 
     if graph_option:
