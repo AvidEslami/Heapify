@@ -1,3 +1,6 @@
 venv/
 *.html
 *.pyc
+*.env
+data/
+static/

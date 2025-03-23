@@ -6,7 +6,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 
 function Graph({ args, disabled, theme }: ComponentProps) {
-  const { name, elem } = args;
+  const { elem } = args;
 
   const graphContainerRef = useRef<HTMLDivElement>(null);
   const [selection, setSelection] = useState("");
@@ -78,11 +78,7 @@ function Graph({ args, disabled, theme }: ComponentProps) {
   }, [selection]);
 
   return (
-    <>
-      <h1>{name}</h1>
-      <div ref={graphContainerRef} style={{ width: "100%", height: "600px" }} />
-      <p>Selected node: {selection || "None"}</p>
-    </>
+    <div ref={graphContainerRef} style={{ width: "100%", height: "600px" }} />
   );
 }
 
