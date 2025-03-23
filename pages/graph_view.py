@@ -9,6 +9,10 @@ from tools.queries import get_initial_topic_list
 
 st.set_page_config(layout="wide")
 
+if 'path_to_delete' in st.session_state:
+    os.remove(st.session_state['path_to_delete'])
+    del st.session_state['path_to_delete']
+
 if 'topic' not in st.session_state:
     st.write("Please switch to the landing page to select a topic or graph view to select a topic and a node!")
     # Redirect buttons 
@@ -101,7 +105,7 @@ else:
         st.session_state["node_parent"] = parents[graph_option]
         st.switch_page("pages/node_view.py")
 
-    option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
+    option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Search for Previously Explored Node. Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
     # st.write(option)
     if option:
         st.session_state["node"] = option
@@ -112,7 +116,7 @@ else:
     # for topic in topics:
     #     if topic not in nodes:
     #         uncovered_topics.append(topic)
-    new_option = st.selectbox("Pick a new node to learn about", uncovered_topics,index=None,placeholder=f"None")
+    new_option = st.selectbox("Pick a new node to learn about", uncovered_topics,index=None,placeholder=f"")
 
     if new_option:
         st.session_state["node"] = new_option
