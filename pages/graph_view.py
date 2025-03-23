@@ -9,6 +9,35 @@ from tools.queries import get_initial_topic_list
 
 st.set_page_config(layout="wide")
 
+def add_logo():
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebarNav"] {
+                background-image: url("https://raw.githubusercontent.com/AlcxMtr/Heapify/main/static/heapify.webp");
+                background-repeat: no-repeat;
+                background-position: 20px 10px;
+                background-size: 72px 72px;       /* 1.5x size */
+                padding-top: 90px;                /* give a bit more vertical room */
+            }
+
+            [data-testid="stSidebarNav"]::before {
+                content: "Heapify";
+                display: block;
+                font-size: 26px;
+                font-weight: bold;
+                margin-left: 100px;               /* shift text to the right of larger image */
+                margin-top: -80px;                /* align vertically with 72px image */
+                line-height: 72px;
+                color: #FF8C00;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+add_logo()
+
+
 if 'path_to_delete' in st.session_state:
     os.remove(st.session_state['path_to_delete'])
     del st.session_state['path_to_delete']
@@ -84,15 +113,30 @@ else:
     st.session_state['all_topics'] = uncovered_topics
 
     def generate_graph():
+
+        # Detect Streamlit theme
+        theme = st.get_option("theme.base")
+        if theme:
+            is_dark = theme == "dark"
+        else:
+            is_dark = True
+
+        # Set colors based on theme
+        bg_color = "#2B2B2B" if is_dark else "#FAFAFA"
+        font_color = "#E0E0E0" if is_dark else "#2C2C2C"
+        topic_node_color = "#FF8C00" if is_dark else "#FF7043"
+        explored_node_color = "#00FF00" if is_dark else "#4CAF50"
+        unexplored_node_color = "#AAAAAA" if is_dark else "#B0BEC5"
+
         graph = nx.Graph()
         # First add the topic node
-        graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#FF8C00", shape="dot", size=25, font={"color": "#E0E0E0"})
+        graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color=topic_node_color, shape="dot", size=25, font={"color": font_color})
 
         for node in nodes:
-            graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15, font={"color": "#E0E0E0"})
+            graph.add_node(node, label=node, color=explored_node_color, shape="dot", size=15, font={"color": font_color})
 
         for topic in uncovered_topics:
-            graph.add_node(topic, label=topic, color="#AAAAAA", shape="dot", size=15, font={"color": "#E0E0E0"})
+            graph.add_node(topic, label=topic, color=unexplored_node_color, shape="dot", size=15, font={"color": font_color})
 
         graph.add_edges_from(edges, length=300)
         # Custom physics for stronger repulsion
@@ -105,9 +149,8 @@ else:
         net.save_graph("test.html")
         with open("test.html", "r", encoding="utf-8") as f:
             html = f.read()
-            html = html.replace("background-color: #ffffff;", "background-color: #2B2B2B;") # Background color
-            # html = html.replace("97c2fc", "ffffff") # Unexplored node colors
-            # html = html.replace
+            html = html.replace("background-color: #ffffff;", f"background-color: {bg_color};") # Background color
+            html = html.replace("border: 1px", f"border: 0px") # Remove border
         return html
 
 
