@@ -4,7 +4,7 @@ import os
 st.title("Welcome to the Decompissect Fragsolveductitionanalysegment Factor!")
 st.write("This is a tool to help you understand the WORLD>~!.")
 
-st.text_input("Enter a topic to learn about:", "examples: [Dark Philosophy, CNN's, Pokemon, Web Dev, Naruto's Mom]", key="input")
+st.text_input("Enter a topic to learn about:", placeholder="examples: [Dark Philosophy, CNN's, Pokemon, Web Dev, Naruto's Mom]", key="input")
 
 st.button("Start Exploring", key="start")
 
