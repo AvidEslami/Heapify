@@ -31,30 +31,25 @@ else:
         with open(f"./data/{st.session_state['topic']}/{st.session_state['node']}", "w", encoding="utf-8") as f:
             f.write(topic_data)
     # Display the node file
-    try:
-        with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
-            # two invisible columns, one with title and the other with a delete node button
-            col1, col2, col3 = st.columns([13, 3, 1])  # Wider left column for title, narrower right for button
+    with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
+        # two invisible columns, one with title and the other with a delete node button
+        col1, col2, col3 = st.columns([13, 3, 1])  # Wider left column for title, narrower right for button
 
-            with col1:
-                st.title(st.session_state['node'].replace(".md", ""))
+        with col1:
+            st.title(st.session_state['node'].replace(".md", ""))
 
-            with col2: 
-                if st.button("Return to Graph View", help="⬅", use_container_width=True):
-                    st.switch_page("pages/graph_view.py")
-            with col3:
-                if st.button("🗑️", help="Delete this node"):
-                    st.success("Node deleted.")
-                    st.session_state["path_to_delete"] = f"./data/{st.session_state['topic']}/{st.session_state['node']}"
-                    st.session_state['node'] = None
-                    # os.remove(f"./data/{st.session_state['topic']}/{st.session_state['node']}")
-                    st.switch_page("pages/graph_view.py")
+        with col2: 
+            if st.button("Return to Graph View", help="⬅", use_container_width=True):
+                st.switch_page("pages/graph_view.py")
+        with col3:
+            if st.button("🗑️", help="Delete this node"):
+                st.success("Node deleted.")
+                st.session_state["path_to_delete"] = f"./data/{st.session_state['topic']}/{st.session_state['node']}"
+                st.session_state['node'] = None
+                # os.remove(f"./data/{st.session_state['topic']}/{st.session_state['node']}")
+                st.switch_page("pages/graph_view.py")
 
-            st.write(f.read())
-    except:
-        st.write("Error reading file")
-        # Delete the corrupted file
-        os.remove(f"./data/{st.session_state['topic']}/{st.session_state['node']}")
+        st.write(f.read())
 
     new_option = st.text_input("Enter a new sub-topic to learn about", value="", help="Enter the name of the new sub-topic", key="new_node")
 
