@@ -86,10 +86,14 @@ else:
     def generate_graph():
         graph = nx.Graph()
         # First add the topic node
-        graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#BF40BF", shape="dot", size=25)
+        graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#FF8C00", shape="dot", size=25, font={"color": "#E0E0E0"})
 
         for node in nodes:
-            graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15)
+            graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15, font={"color": "#E0E0E0"})
+
+        for topic in uncovered_topics:
+            graph.add_node(topic, label=topic, color="#AAAAAA", shape="dot", size=15, font={"color": "#E0E0E0"})
+
         graph.add_edges_from(edges, length=300)
         # Custom physics for stronger repulsion
 
@@ -101,7 +105,7 @@ else:
         net.save_graph("test.html")
         with open("test.html", "r", encoding="utf-8") as f:
             html = f.read()
-            # html = html.replace("background-color: #ffffff;", "background-color: lightgray;") # Background color
+            html = html.replace("background-color: #ffffff;", "background-color: #2B2B2B;") # Background color
             # html = html.replace("97c2fc", "ffffff") # Unexplored node colors
             # html = html.replace
         return html
