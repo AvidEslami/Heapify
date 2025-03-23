@@ -6,7 +6,7 @@ from tools.queries import get_topic_lesson
 if ('topic' not in st.session_state) or ('node' not in st.session_state) or (st.session_state['node'] is None):
     st.write("Please switch to the landing page to select a topic or graph view to select a topic and a node!")
 
-    # Redirect buttons
+    # Redirect buttons 
     st.button("Go to Landing", key="landing")
     st.button("Go to Graph View", key="graph_view")
 
