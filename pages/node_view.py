@@ -27,4 +27,4 @@ else:
     # Display the node file
     with open (f"./data/{st.session_state['topic']}/{st.session_state['node']}", 'r') as f:
         st.title(st.session_state['node'].replace(".md", ""))
-        st.write_stream(f)
+        st.write(f.read())

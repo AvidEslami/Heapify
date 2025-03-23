@@ -26,6 +26,7 @@ def graphify_data():
         with open(f"./data/{st.session_state['topic']}/{filename}", "r") as f:
             if filename == "topic_list.txt":
                 continue
+            filename = filename.replace(".md", "") # Strip .md from filename
             nodes.append(filename)
             while character := f.read(1):
                 if character == "[":
@@ -39,15 +40,22 @@ def graphify_data():
                         edges.append((filename, target_node))
     return nodes, edges
 
+
 nodes, edges = graphify_data()
-st.session_state['all_topics'] = topics
+# st.session_state['all_topics'] = topics + nodes
 for topic in topics:
-    if topic not in nodes:
-        edges.append((st.session_state['topic'], topic))
+    edges.append((st.session_state['topic'], topic))
+
+
+uncovered_topics = []
+for edge in edges:
+    if edge[1] not in nodes and edge[1] not in uncovered_topics:
+        uncovered_topics.append(edge[1])
+st.session_state['all_topics'] = uncovered_topics
 
 graph = nx.Graph()
 # First add the topic node
-graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#ff0000", shape="dot", size=15)
+graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color="#BF40BF", shape="dot", size=25)
 
 for node in nodes:
     graph.add_node(node, label=node, color="#00ff00", shape="dot", size=15)
@@ -55,6 +63,7 @@ graph.add_edges_from(edges)
 
 net = Network(notebook=False, cdn_resources='remote')
 net.from_nx(graph)
+net.show_buttons(filter_=['nodes', 'edges', 'physics'])
 
 st.title("Graph pyvis test!")
 
@@ -62,22 +71,6 @@ st.title("Graph pyvis test!")
 net.save_graph("test.html")
 with open("test.html", "r", encoding="utf-8") as f:
     html = f.read()
-
-# # Inject script to update top-level window location
-# html = html.replace(
-#     "</body>",
-#     """
-#     <script type="text/javascript">
-#         network.on("click", function (params) {
-#             if (params.nodes.length > 0) {
-#                 let nodeId = params.nodes[0];
-#                 window.location.search = "?node=" + nodeId;
-#             }
-#         });
-#     </script>
-#     </body>
-#     """
-# )
 
 # source_code = html
 components.html(html, height=600, width=800)
@@ -88,10 +81,10 @@ if option:
     st.session_state["node"] = option
     st.switch_page("pages/node_view.py")
 
-uncovered_topics = []
-for topic in topics:
-    if topic not in nodes:
-        uncovered_topics.append(topic)
+# uncovered_topics = []
+# for topic in topics:
+#     if topic not in nodes:
+#         uncovered_topics.append(topic)
 new_option = st.selectbox("Pick a new node to learn about", uncovered_topics,index=None,placeholder=f"None")
 
 if new_option:
