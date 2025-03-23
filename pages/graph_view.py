@@ -1,6 +1,7 @@
 import streamlit as st
 import networkx as nx
 from pyvis.network import Network
+from collections import defaultdict
 import os
 from components.custom_graph import custom_graph
 
@@ -22,6 +23,7 @@ if 'topics' not in locals():
 def graphify_data():
     nodes = []
     edges = []
+    parents = {}
     for filename in os.listdir(f"./data/{st.session_state['topic']}"):
         with open(f"./data/{st.session_state['topic']}/{filename}", "r") as f:
             if filename == "topic_list.txt":
@@ -38,13 +40,15 @@ def graphify_data():
                             target_node += next_char
                             next_char = f.read(1)
                         edges.append((filename, target_node))
-    return nodes, edges
+                        parents[target_node] = filename
+    return nodes, edges, parents
 
 
-nodes, edges = graphify_data()
+nodes, edges, parents = graphify_data()
 # st.session_state['all_topics'] = topics + nodes
 for topic in topics:
     edges.append((st.session_state['topic'], topic))
+    parents[topic] = st.session_state['topic']
 
 
 uncovered_topics = []
@@ -81,12 +85,14 @@ graph_option = custom_graph(elem=source_code, key="custom_graph")
 
 if graph_option:
     st.session_state["node"] = graph_option
+    st.session_state["node_parent"] = parents[graph_option]
     st.switch_page("pages/node_view.py")
 
 option = st.selectbox("Pick an existing node:", nodes,index=None,placeholder=f"Currently selected: {st.session_state['node'] if 'node' in st.session_state else 'None'}")
 # st.write(option)
 if option:
     st.session_state["node"] = option
+    st.session_state["node_parent"] = parents[option]
     st.switch_page("pages/node_view.py")
 
 # uncovered_topics = []
@@ -97,6 +103,7 @@ new_option = st.selectbox("Pick a new node to learn about", uncovered_topics,ind
 
 if new_option:
     st.session_state["node"] = new_option
+    st.session_state["node_parent"] = parents[new_option]
     st.switch_page("pages/node_view.py")
 
 # params = st.query_params
