@@ -7,6 +7,8 @@ from components.custom_graph import custom_graph
 
 from tools.queries import get_initial_topic_list
 
+st.set_page_config(layout="wide")
+
 # Check if there's a directory for ./data/{topic} and create it if it doesn't exist
 if not os.path.exists(f"./data/{st.session_state['topic']}"):
     os.makedirs(f"./data/{st.session_state['topic']}")
@@ -49,6 +51,7 @@ nodes, edges, parents = graphify_data()
 for topic in topics:
     edges.append((st.session_state['topic'], topic))
     parents[topic] = st.session_state['topic']
+parents[st.session_state['topic']] = "wholistically"
 
 
 uncovered_topics = []
@@ -77,7 +80,6 @@ def generate_graph():
         html = f.read()
     return html
 
-st.title("Graph pyvis test!")
 
 source_code = generate_graph()
 
