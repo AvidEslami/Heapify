@@ -32,9 +32,9 @@ def add_logo():
     )
 add_logo()
 
-st.title("Welcome to the Decompissect Fragsolveductitionanalysegment Factor!")
+st.title("Welcome to Heapify!")
 
-st.subheader("Learn Something New!")
+st.subheader("Learn Something New")
 st.text_input("Enter a topic to learn about:", placeholder="examples: [Dark Philosophy, CNN's, Pokemon, Web Dev, Naruto's Mom]", key="input")
 
 st.button("Start Exploring", key="start_button")
