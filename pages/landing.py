@@ -52,7 +52,7 @@ st.subheader("Delete a topic")
 st.selectbox("Enter a previously explored topic to delete it:", options, placeholder='', index=None, key="delete_topic")
 # On button press, save the topic to session_state and redirect to graph_view
 if st.session_state['input'] and st.session_state['start_button']:
-    topic = st.session_state['input']
+    topic = st.session_state['input'].strip()
 
     # Clear the session state
     for key in st.session_state.keys():

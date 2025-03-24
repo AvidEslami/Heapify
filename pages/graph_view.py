@@ -75,8 +75,7 @@ else:
             ignored_topics = ""
         for filename in os.listdir(f"./data/{st.session_state['topic']}"):
             with open(f"./data/{st.session_state['topic']}/{filename}", "r") as f:
-                # st.write(filename,ignored_topics)
-                if filename == "topic_list.txt" or filename == "ignored_topics.txt" or filename in ignored_topics:
+                if filename == "topic_list.txt" or filename == "ignored_topics.txt" or filename.replace(".md","") in ignored_topics:
                     continue
                 filename = filename.replace(".md", "") # Strip .md from filename
                 nodes.append(filename)
@@ -91,6 +90,8 @@ else:
                                 next_char = f.read(1)
                             if "*" in target_node or (len(target_node) > 50):
                                 # We drop this connection
+                                continue
+                            if target_node in ignored_topics:
                                 continue
                             edges.append((filename, target_node))
                             parents[target_node] = filename
@@ -130,6 +131,7 @@ else:
 
         graph = nx.Graph()
         # First add the topic node
+        st.write(st.session_state['topic'])
         graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color=topic_node_color, shape="dot", size=25, font={"color": font_color})
 
         for node in nodes:

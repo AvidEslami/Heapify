@@ -19,6 +19,7 @@ def get_initial_topic_list(topic: str) -> list:
     if response_text[0:6] == "python":
         response_text = response_text[6:].strip()
     print(f"Cleaned Response text: \n<{response_text}>")
+    response_text = response_text.replace("_"," ")    
     return eval(response_text)
 
 def get_topic_lesson(topic: str, node: str, parent: list) -> str:
