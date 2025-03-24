@@ -131,7 +131,7 @@ else:
 
         graph = nx.Graph()
         # First add the topic node
-        st.write(st.session_state['topic'])
+        # st.write(st.session_state['topic'])
         graph.add_node(st.session_state['topic'], label=st.session_state['topic'], color=topic_node_color, shape="dot", size=25, font={"color": font_color})
 
         for node in nodes:
