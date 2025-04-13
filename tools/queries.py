@@ -1,8 +1,13 @@
 from google import genai
+import os
 
 def get_initial_topic_list(topic: str) -> list:
-    with open(".env", "r") as f:
-        api_key = f.read()
+    try:
+        with open(".env", "r") as f:
+            api_key = f.read()
+    except:
+        # Load from environment variable: "gemini_key"
+        api_key = os.environ["gemini_key"]
     with open("./prompt_structures/initial_topic.txt", "r") as f:
         prompt = f.read()
     prompt = prompt.replace("TOPIC", topic)
@@ -23,8 +28,12 @@ def get_initial_topic_list(topic: str) -> list:
     return eval(response_text)
 
 def get_topic_lesson(topic: str, node: str, parent: list) -> str:
-    with open(".env", "r") as f:
-        api_key = f.read()
+    try:
+        with open(".env", "r") as f:
+            api_key = f.read()
+    except:
+        # Load from environment variable: "gemini_key"
+        api_key = os.environ["gemini_key"]
     with open("./prompt_structures/topic_lesson.txt", "r") as f:
         prompt = f.read()
     prompt = prompt.replace("CONTEXT", topic)
